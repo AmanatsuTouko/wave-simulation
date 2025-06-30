@@ -25,6 +25,7 @@ public class WaveSimulationBoxel : MonoBehaviour
 
     public GameObject spherePrefab;
     private GameObject sphere;
+    public float sphereInitHeight = 10;
 
     void Start()
     {
@@ -34,7 +35,7 @@ public class WaveSimulationBoxel : MonoBehaviour
         GenerateBoxel();
 
         GameObject sphereObject = GameObject.Instantiate(spherePrefab);
-        sphereObject.transform.position = new Vector3(gridSize / 2, 5, gridSize / 2);
+        sphereObject.transform.position = new Vector3(gridSize / 2, sphereInitHeight, gridSize / 2);
         sphere = sphereObject;
 
         prev = new float[gridSize, gridSize];
@@ -65,7 +66,8 @@ public class WaveSimulationBoxel : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.R))
         {
-            sphere.transform.position = new Vector3(gridSize / 2, 5, gridSize / 2);
+            sphere.transform.position = new Vector3(gridSize / 2, sphereInitHeight, gridSize / 2);
+            sphere.GetComponent<Rigidbody>().velocity = new Vector3(0,0,0);
         }
     }
 

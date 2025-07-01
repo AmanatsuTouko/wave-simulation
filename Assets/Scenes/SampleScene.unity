@@ -320,7 +320,7 @@ GameObject:
   - component: {fileID: 1331032623}
   - component: {fileID: 1331032624}
   m_Layer: 0
-  m_Name: WaveSimulation2
+  m_Name: WaveSimulationVoxel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -361,6 +361,7 @@ MonoBehaviour:
   impulse: 10
   boxelPrefab: {fileID: 3447878433939276612, guid: f66e13b7b90a59543a38452f714846e7, type: 3}
   spherePrefab: {fileID: 6072934634148186545, guid: 39ddd1b4441ba6842b86b0a8d8635961, type: 3}
+  sphereInitHeight: 10
 --- !u!33 &1331032624
 MeshFilter:
   m_ObjectHideFlags: 0

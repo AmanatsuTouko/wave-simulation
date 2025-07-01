@@ -1,8 +1,6 @@
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-[RequireComponent(typeof(MeshFilter))]
 public class WaveSimulationBoxel : MonoBehaviour
 {
     public int gridSize = 100;
@@ -10,12 +8,19 @@ public class WaveSimulationBoxel : MonoBehaviour
     public float waveSpeed = 1.0f;
     public float timeStep = 0.02f;
     public float damping = 0.996f;
-
     public float impulse = 1.0f;
+
+    // ---------------------------------------
 
     private float[,] prev;
     private float[,] current;
     private float[,] next;
+
+    // ---------------------------------------
+
+    private Vector3 waveBasePos; // voxelを配置する基準位置
+
+    // ---------------------------------------
 
     public GameObject boxelPrefab;
     public GameObject[,] voxels;
@@ -27,6 +32,8 @@ public class WaveSimulationBoxel : MonoBehaviour
     void Start()
     {
         voxels = new GameObject[gridSize, gridSize];
+
+        waveBasePos = new Vector3(-gridSize / 2.0f, 0.0f, -gridSize / 2.0f);
 
         GenerateVoxel();
 
@@ -123,7 +130,7 @@ public class WaveSimulationBoxel : MonoBehaviour
                 voxels[i, j] = voxel;
                 
                 // 位置の指定
-                voxel.transform.position = new Vector3(i* spacing, 0, j * spacing);
+                voxel.transform.position = waveBasePos + new Vector3(i* spacing, 0, j * spacing);
             }
         }
     }

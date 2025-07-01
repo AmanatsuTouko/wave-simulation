@@ -1,7 +1,7 @@
+using System.Data.SqlTypes;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-public class WaveSimulationBoxel : MonoBehaviour
+public class WaveManager : MonoBehaviour
 {
     public int gridSize = 100;
     public float spacing = 1.0f;
@@ -29,6 +29,10 @@ public class WaveSimulationBoxel : MonoBehaviour
     private GameObject sphere;
     public float sphereInitHeight = 10;
 
+    // ---------------------------------------
+
+    public GameObject lineSegmentWavePrefab;
+
     void Start()
     {
         voxels = new GameObject[gridSize, gridSize];
@@ -54,23 +58,31 @@ public class WaveSimulationBoxel : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            AddImpulse(gridSize / 2, gridSize / 2, -impulse);
+            AddImpulseWithIndex(gridSize / 2, gridSize / 2, -impulse);
         }
         
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            AddImpulse(gridSize / 3, gridSize / 3 * 2, -impulse);
+            AddImpulseWithIndex(gridSize / 3, gridSize / 3 * 2, -impulse);
         }
 
         if (Input.GetKeyDown(KeyCode.S))
         {
-            AddImpulse(gridSize / 3 * 2, gridSize / 3, -impulse);
+            AddImpulseWithIndex(gridSize / 3 * 2, gridSize / 3, -impulse);
         }
         
         if (Input.GetKeyDown(KeyCode.R))
         {
             sphere.transform.position = new Vector3(gridSize / 2, sphereInitHeight, gridSize / 2);
             sphere.GetComponent<Rigidbody>().velocity = new Vector3(0,0,0);
+        }
+
+        if(Input.GetKeyDown(KeyCode.P))
+        {
+            Vector3 pos = new Vector3(0, 0, 0);
+            Vector3 direction = new Vector3(1.0f, 0f, 0.0f);
+
+            CreateLineSegmentWave(pos, direction, 4.0f, 0.02f);
         }
     }
 
@@ -111,14 +123,52 @@ public class WaveSimulationBoxel : MonoBehaviour
         }
     }
 
-    void AddImpulse(int x, int y, float strength)
+    void AddImpulseWithIndex(int x, int y, float strength)
     {
         if (x >= 1 && x < gridSize - 1 && y >= 1 && y < gridSize - 1)
         {
             current[x, y] += strength;
         }
     }
-    
+
+    public void AddImpulse(Vector3 pos, float strength)
+    {
+        float range = gridSize / 2.0f - 1.0f;
+        if ( -range < pos.x && pos.x < range && -range < pos.y && pos.y < range )
+        {
+            // 値を補正
+            pos.x += gridSize / 2.0f;
+            pos.z += gridSize / 2.0f;
+
+            // インデックスを求める
+            int x_idx = (int)(pos.x / spacing);
+            int z_idx = (int)(pos.z / spacing);
+
+            // その地点でimpulseを加える
+            AddImpulseWithIndex(x_idx, z_idx, strength);
+        }
+    }
+
+    public Vector2 GetVoxelIndexFromPos(Vector3 pos)
+    {
+        float range = gridSize / 2.0f - 1.0f;
+        if ( -range < pos.x && pos.x < range && -range < pos.y && pos.y < range )
+        {
+            // 値を補正する
+            pos.x += gridSize / 2.0f;
+            pos.z += gridSize / 2.0f;
+
+            // インデックスを求める
+            int x_idx = (int)(pos.x / spacing);
+            int z_idx = (int)(pos.z / spacing);
+
+            return new Vector2(x_idx, z_idx);
+        }
+
+        // エラーインデックスを返す
+        return new Vector2(-1, -1);
+    }
+
     void GenerateVoxel()
     {
         for (int i = 0; i < gridSize; i++)
@@ -133,5 +183,22 @@ public class WaveSimulationBoxel : MonoBehaviour
                 voxel.transform.position = waveBasePos + new Vector3(i* spacing, 0, j * spacing);
             }
         }
+    }
+
+    void CreateLineSegmentWave(Vector3 pos, Vector3 direction, float length, float speed)
+    {
+        // 線分を作成する
+
+        // 線分の向きは，波の向きと垂直にする
+        direction.y = 0;
+        Vector3 lineSegmentDir = Vector3.Cross(direction.normalized, Vector3.up);
+
+        // 線分の始点
+        Vector3 startPos = pos + lineSegmentDir * length / 2.0f;
+        Vector3 endPos   = pos - lineSegmentDir * length / 2.0f;
+
+        // 線分を作成
+        GameObject lineSegmentWave = GameObject.Instantiate(lineSegmentWavePrefab);
+        lineSegmentWave.GetComponent<LineSegmentWave>().init(startPos, endPos, lineSegmentDir * speed, this);
     }
 }

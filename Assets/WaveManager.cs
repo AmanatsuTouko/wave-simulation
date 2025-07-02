@@ -73,16 +73,16 @@ public class WaveManager : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.R))
         {
-            sphere.transform.position = new Vector3(gridSize / 2, sphereInitHeight, gridSize / 2);
+            sphere.transform.position = new Vector3(-10.0f, sphereInitHeight, 0);
             sphere.GetComponent<Rigidbody>().velocity = new Vector3(0,0,0);
         }
 
         if(Input.GetKeyDown(KeyCode.P))
         {
             Vector3 pos = new Vector3(0, 0, 0);
-            Vector3 direction = new Vector3(1.0f, 0f, 0.0f);
+            Vector3 direction = new Vector3(0.0f, 0.0f, 1.0f);
 
-            CreateLineSegmentWave(pos, direction, 4.0f, 0.02f);
+            CreateLineSegmentWave(pos, direction, 6.0f, 0.2f);
         }
     }
 

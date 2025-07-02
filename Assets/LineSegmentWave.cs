@@ -49,31 +49,46 @@ public class LineSegmentWave : MonoBehaviour
         float waveMaxLength = Vector3.Distance(startPos, endPos);
         float waveLength = 0;
         Vector3 direction = Vector3.Normalize(endPos - startPos);
+        Debug.Log(direction);
 
         // 波を発生させたindex
         Vector2 pre_impulse_index = new Vector2(-1, -1);
 
+        int count = 0;
+
         while(waveLength < waveMaxLength)
         {
+            Debug.Log(count++);
+            Debug.Log(impulsePoint);
+            Debug.Log(waveLength);
+
             // 波の発生ポイントが重なっていないかの確認
             Vector2 impulse_index = waveManager.GetVoxelIndexFromPos(impulsePoint);
-            
-            // 発生ポイントがボクセル内かどうか
-            if(impulse_index.x != -1 && impulse_index.y != -1)
-            {
-                // 前回の発生ポイントと同じかどうか
-                if(pre_impulse_index != impulse_index)
-                {
-                    Debug.Log(impulsePoint);
 
-                    waveManager.AddImpulse(impulsePoint, 1.0f);
-                    pre_impulse_index = impulse_index;
-                }
+            // 発生ポイントがボクセル内かどうか
+            if(impulse_index.x == -1 && impulse_index.y == -1)
+            {
+                // 次のポイントへ更新
+                impulsePoint += direction * splitLengthUnit;
+                waveLength += splitLengthUnit;
+                continue;
             }
 
+            // 前回の発生ポイントと同じかどうか
+            if(pre_impulse_index == impulse_index)
+            {
+                // 次のポイントへ更新
+                impulsePoint += direction * splitLengthUnit;
+                waveLength += splitLengthUnit;
+                continue;
+            }
+
+            waveManager.AddImpulse(impulsePoint, 0.4f);
+            pre_impulse_index = impulse_index;
+            
             // 次のポイントへ更新
+            impulsePoint += direction * splitLengthUnit;
             waveLength += splitLengthUnit;
-            impulsePoint = direction * waveLength;
         }        
     }
 

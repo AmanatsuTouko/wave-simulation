@@ -32,8 +32,11 @@ public class CircleWave : MonoBehaviour
         gameObject.transform.position = pos;
 
         // 円を一定単位で区切って，波を発生させる
-        float start_angle = -angle * 0.5f;
-        float end_angle = angle * 0.5f;
+        // float start_angle = -angle * 0.5f;
+        // float end_angle = angle * 0.5f;
+        float start_angle = -360 + 180 - angle * 0.5f;
+        float end_angle = -180 + angle * 0.5f;
+
         Vector2 pre_impulse_index = new Vector2(-1, -1);
 
         Debug.Log(start_angle);

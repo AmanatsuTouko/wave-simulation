@@ -362,6 +362,7 @@ MonoBehaviour:
   spherePrefab: {fileID: 6072934634148186545, guid: 39ddd1b4441ba6842b86b0a8d8635961, type: 3}
   sphereInitHeight: 10
   lineSegmentWavePrefab: {fileID: 9052424199431331731, guid: 57cfb809308cb4f4281dee2cefdbf5b1, type: 3}
+  circleWavePrefab: {fileID: 5640695364157844483, guid: 484e7d1e241246c4a814bb4d9930468d, type: 3}
 --- !u!1 &1368734413
 GameObject:
   m_ObjectHideFlags: 0

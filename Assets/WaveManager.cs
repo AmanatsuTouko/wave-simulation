@@ -33,6 +33,8 @@ public class WaveManager : MonoBehaviour
 
     public GameObject lineSegmentWavePrefab;
 
+    public GameObject circleWavePrefab;
+
     void Start()
     {
         voxels = new GameObject[gridSize, gridSize];
@@ -73,7 +75,7 @@ public class WaveManager : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.R))
         {
-            sphere.transform.position = new Vector3(-10.0f, sphereInitHeight, 0);
+            sphere.transform.position = new Vector3(5.0f, sphereInitHeight, 0);
             sphere.GetComponent<Rigidbody>().velocity = new Vector3(0,0,0);
         }
 
@@ -81,8 +83,14 @@ public class WaveManager : MonoBehaviour
         {
             Vector3 pos = new Vector3(0, 0, 0);
             Vector3 direction = new Vector3(0.0f, 0.0f, 1.0f);
+            CreateLineSegmentWave(pos, direction, 6.0f, -0.2f);
+        }
 
-            CreateLineSegmentWave(pos, direction, 6.0f, 0.2f);
+        if(Input.GetKeyDown(KeyCode.O))
+        {
+            Vector3 pos = new Vector3(-30, 0, 0);
+            Vector3 vel = new Vector3(0.2f, 0.0f, 0.0f);
+            CreateCircleWave(pos, vel, 10.0f, 120.0f);
         }
     }
 
@@ -200,5 +208,11 @@ public class WaveManager : MonoBehaviour
         // 線分を作成
         GameObject lineSegmentWave = GameObject.Instantiate(lineSegmentWavePrefab);
         lineSegmentWave.GetComponent<LineSegmentWave>().init(startPos, endPos, lineSegmentDir * speed, this);
+    }
+
+    void CreateCircleWave(Vector3 pos, Vector3 velocity, float radius, float angle)
+    {
+        GameObject circleWave = GameObject.Instantiate(circleWavePrefab);
+        circleWave.GetComponent<CircleWave>().init(pos, velocity, radius, angle, this);
     }
 }
